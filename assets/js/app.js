@@ -1,6 +1,6 @@
 const peopleForm = (function () {
   const state = {}
-  state.people = ['Seba']
+  state.people = []
   
   const inputBtn  =  document.querySelector('button[type="submit"]')
   const nameInput = document.querySelector('input[type="text"]')
@@ -9,28 +9,30 @@ const peopleForm = (function () {
   inputBtn.addEventListener('click', addPerson)
   peopleList.addEventListener('click', removePerson)
   
-  render()
-  
   function removePerson(e){
-    let btn, personName, nameIndex
-    
     if(!e.target.classList.contains('label-warning')){ return }
-    
-    btn = e.target.parentNode
-    personName = btn.innerText.split(" x")[0]
-    nameIndex = state.people.indexOf(personName)
-    state.people.splice(nameIndex,1)
-    peopleList.removeChild(btn);
+
+    const btn = e.target.parentNode
+    removeFromStateAndHtml(btn)
   }
   
   function apiRemovePerson(str){
-    let btn = getButtonByString(str)
+    const btn = getButtonByString(str)
+    removeFromStateAndHtml(btn)
+  
+  }
+
+  function removeFromStateAndHtml(btn){
+    if(!btn){ return }
+
     const personName = btn.innerText.split(" x")[0]
     const nameIndex = state.people.indexOf(personName)
+    
     state.people.splice(nameIndex,1)
     peopleList.removeChild(btn);
+
   }
-  
+   
   function getButtonByString(str){
     if(state.people.indexOf(str) > -1){
       for (const button of document.querySelectorAll("button.btn-success")) {
@@ -43,7 +45,6 @@ const peopleForm = (function () {
   }
   
   function addPerson(e){
-  // TODO: Agregar validaciones: Campo nombre no nulo, y mínimo 2 carácteres
     let personName = e
     if(typeof(e)=='object'){ 
       e.preventDefault() 
